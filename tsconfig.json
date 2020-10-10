@@ -1,0 +1,32 @@
+{
+    "extends": "@quasar/app/tsconfig-preset",
+    "compilerOptions": {
+        "sourceMap": true,
+        "target": "es2018",
+        "strict": true,
+        "experimentalDecorators": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "noImplicitAny": false,
+        "downlevelIteration": true,
+        "emitDecoratorMetadata": true,
+        "allowSyntheticDefaultImports": true,
+        "strictPropertyInitialization": false,
+        "lib": [
+            "DOM",
+            "ES6",
+            "DOM.Iterable",
+            "ScriptHost",
+            "es2020.string"
+        ],
+        "types": [
+            "node",
+            "quasar"
+        ]
+    },
+    "include": ["*.ts", "src/**/*.ts", "src/**/*.vue"],
+    "exclude": [
+        "node_modules"
+    ]
+}

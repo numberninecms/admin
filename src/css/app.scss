@@ -1,0 +1,40 @@
+/*!
+ * This file is part of the NumberNine package.
+ *
+ * (c) William Arin <williamarin.dev@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+$primary-highlighted : rgba(70, 166, 233, 0.8);
+
+a {
+    color: $primary;
+    text-decoration: none;
+
+    &:hover {
+        color: $primary-highlighted;
+    }
+}
+
+.q-table th {
+    font-size: inherit;
+}
+.q-table tbody td {
+    font-size: inherit;
+}
+
+.q-drawer .q-list .q-hoverable:hover {
+    color: white;
+}
+
+.control-label {
+    left: 0;
+    right: 0;
+    top: -20px;
+    color: $secondary;
+    font-size: 12px;
+    line-height: 20px;
+    pointer-events: none;
+}
