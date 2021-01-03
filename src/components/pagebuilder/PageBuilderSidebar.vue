@@ -12,7 +12,7 @@
         <q-toolbar class="bg-secondary text-white">
             <q-btn flat dense icon="save" @click="publishComponents" :loading="isPublishing">
                 <q-tooltip>
-                    Save page components
+                    Save page
                 </q-tooltip>
             </q-btn>
             <q-btn v-if="hasOptions" flat dense icon="mdi-file-document-edit" @click="openOptions" label="Classic editor"/>
@@ -52,7 +52,7 @@
             </q-tab-panel>
 
             <q-tab-panel name="form">
-                <PageBuilderComponentForm :component="selectedComponent" v-if="selectedComponent"/>
+                <PageBuilderComponentForm :component="selectedComponent" v-if="selectedComponent" :key="selectedComponent.id"/>
             </q-tab-panel>
         </q-tab-panels>
 

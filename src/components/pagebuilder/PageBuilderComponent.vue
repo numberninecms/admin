@@ -28,14 +28,12 @@
                @dblclick.native.stop="edit"/>
 </template>
 <script lang="ts">
-import Preloader from 'src/model/interfaces/Preloader';
-import * as preloaders from 'src/model/preloaders/preloaders';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { EventBus } from 'src/event/EventBus';
 import PageComponent from 'src/model/interfaces/PageComponent';
 import * as changeCase from 'change-case';
 import { namespace } from 'vuex-class';
-import store from 'src/store';
+import preload from 'src/utils/preload';
 
 const PageBuilderStore = namespace('PageBuilder');
 
@@ -57,10 +55,7 @@ export default class PageBuilderComponent extends Vue {
     private mouse: {down: boolean, move: boolean} = {down: false, move: false};
 
     private created() {
-        if (typeof preloaders[changeCase.pascalCase(this.component.name) + 'Preloader'] === 'function') {
-            const preloader: Preloader = new preloaders[changeCase.pascalCase(this.component.name) + 'Preloader'](this.component, store);
-            preloader.preload();
-        }
+        preload(this.component);
     }
 
     private highlight() {
