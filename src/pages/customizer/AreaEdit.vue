@@ -19,7 +19,7 @@
                               @loaded="onLoaded" disable-links />
             </template>
             <template v-slot:after>
-                <PageBuilderSidebar/>
+                <PageBuilderSidebar :height="frameHeight"/>
             </template>
         </q-splitter>
 

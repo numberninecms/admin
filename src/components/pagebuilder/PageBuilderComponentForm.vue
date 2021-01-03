@@ -27,6 +27,7 @@ import { EventBus } from 'src/event/EventBus';
 import PageComponent from 'src/model/interfaces/PageComponent';
 import Form from 'src/model/interfaces/Form';
 import formControls from '../form/formControls';
+import preload from 'src/utils/preload';
 
 const PageBuilderStore = namespace('PageBuilder');
 
@@ -41,6 +42,10 @@ export default class PageBuilderComponentForm extends Vue {
 
     @Prop()
     private component: PageComponent;
+
+    private created() {
+        preload(this.component);
+    }
 
     private formControlName(controlName: string): string {
         return 'FormControl' + controlName;

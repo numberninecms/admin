@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="q-ma-md row q-col-gutter-md" v-if="selectedMenu">
-            <div class="col-md-2 col-sm-4 col-xs">
+            <div class="col-md-2 col-sm-4 col-xs-12 col-xs order-sm-none order-xs-last">
                 <q-expansion-item v-for="contentType in contentTypes"
                                   :key="contentType.name"
                                   :label="getLabel(contentType)"

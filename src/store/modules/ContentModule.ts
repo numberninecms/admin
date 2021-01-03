@@ -227,7 +227,7 @@ export default class ContentModule extends VuexModule {
         return (id: number) => {
             for (const type in this.contentEntities) {
                 if (this.contentEntities.hasOwnProperty(type)) {
-                    const entity = this.contentEntities[type].find((e) => e.id === id);
+                    const entity = this.contentEntities[type].find((e) => e.id === +id);
 
                     if (entity) {
                         return entity;

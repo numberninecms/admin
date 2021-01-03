@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+    quasar:
+        container_name: numbernine_quasar
+        build: .
+        ports:
+            - 10000:8080
+        working_dir: /srv/app/
+        restart: always
+        volumes:
+            - ./:/srv/app/
+        networks:
+            - demo_default
+
+networks:
+    demo_default:
+        external: true

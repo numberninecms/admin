@@ -8,14 +8,14 @@
   -->
 
 <template>
-    <div>
+    <div v-if="height">
         <q-toolbar class="bg-secondary text-white">
             <q-btn flat dense icon="save" @click="publishComponents" :loading="isPublishing">
                 <q-tooltip>
-                    Save page components
+                    Save page
                 </q-tooltip>
             </q-btn>
-            <q-btn v-if="hasOptions" flat dense icon="mdi-file-document-edit" @click="openOptions" label="Classic editor"/>
+            <q-btn v-if="hasClassicEditor" flat dense icon="mdi-file-document-edit" @click="openClassicEditor" label="Classic editor"/>
             <q-space/>
             <q-btn-toggle :value="viewSize"
                           @input="setView"
@@ -46,13 +46,13 @@
         </q-tabs>
 
         <q-tab-panels v-model="tab" keep-alive>
-            <q-tab-panel name="components">
+            <q-tab-panel name="components" :style="{maxHeight: (height - 120) + 'px'}">
                 <PageBuilderComponentsTree @edit="tab = 'form'"/>
                 <q-btn class="q-mt-md q-px-md" dense color="primary" label="Add to content" @click="openDialog = true" />
             </q-tab-panel>
 
-            <q-tab-panel name="form">
-                <PageBuilderComponentForm :component="selectedComponent" v-if="selectedComponent"/>
+            <q-tab-panel name="form" :style="{maxHeight: (height - 120) + 'px'}">
+                <PageBuilderComponentForm :component="selectedComponent" v-if="selectedComponent" :key="selectedComponent.id"/>
             </q-tab-panel>
         </q-tab-panels>
 
@@ -109,7 +109,10 @@ export default class PageBuilderSidebar extends Vue {
     @PageBuilderStore.Getter private getComponentById;
 
     @Prop({type: Boolean})
-    private hasOptions: boolean;
+    private hasClassicEditor: boolean;
+
+    @Prop()
+    private height: number;
 
     private panel = 'structure';
     private tab = 'components';
@@ -188,8 +191,8 @@ export default class PageBuilderSidebar extends Vue {
         EventBus.emit('Frame:manual-view-size');
     }
 
-    private openOptions(): void {
-        this.$emit('open-page-options');
+    private openClassicEditor(): void {
+        this.$emit('open-classic-editor');
     }
 }
 </script>
