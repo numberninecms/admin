@@ -104,6 +104,8 @@ export default class TinyEditor extends Vue {
                 }
             });
         });
+
+        this.active = true;
     }
 
     private activated(): void {
