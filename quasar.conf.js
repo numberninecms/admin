@@ -53,6 +53,7 @@ module.exports = function (ctx) {
 
             components: [],
             directives: [],
+            cssAddon: true,
 
             // Quasar plugins
             plugins: [
