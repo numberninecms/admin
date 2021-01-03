@@ -13,13 +13,15 @@
             <template v-slot:before>
                 <q-resize-observer @resize="onSplitterChanged" debounce="0" />
                 <DynamicFrame id="page-builder-content-frame"
-                              v-if="!isOptionPage && currentEntity"
+                              v-if="currentEntity"
                               :height="frameHeight"
                               :src="url" :loading="isLoading"
                               @loaded="onLoaded" disable-links />
             </template>
             <template v-slot:after>
-                <PageBuilderSidebar :has-options="!isOptionPage" @open-page-options="editContentOptions()"/>
+                <PageBuilderSidebar :height="frameHeight"
+                                    :has-classic-editor="true"
+                                    @open-classic-editor="openClassicEditor()"/>
             </template>
         </q-splitter>
         <MediaLibraryDialog/>
@@ -107,7 +109,7 @@ export default class ContentEdit extends Vue {
         EventBus.emit('Frame:auto-view-size');
     }
 
-    private editContentOptions() {
+    private openClassicEditor() {
         this.$router.push({name: this.type + '_edit_classic', params: {id: this.id.toString(), type: this.type}});
     }
 
@@ -117,10 +119,6 @@ export default class ContentEdit extends Vue {
         }
 
         return new URI(this.currentEntity.publicUrl).addQuery('n9', 'admin').toString();
-    }
-
-    private get isOptionPage(): boolean {
-        return this.$route.name === this.type + '_edit_classic';
     }
 }
 </script>
