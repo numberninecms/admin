@@ -9,7 +9,7 @@
 
 <template>
     <div>
-        <q-img v-if="file" :src="thumbnail" contain class="full-width q-mb-sm" />
+        <q-img v-if="file" :src="thumbnail" contain class="full-width q-mb-sm" style="max-height: 150px" />
         <q-btn outline class="full-width" :color="color" label="Select media" @click="showMediaLibrary = true" />
     </div>
 </template>
