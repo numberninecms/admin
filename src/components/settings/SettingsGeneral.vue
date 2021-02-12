@@ -9,6 +9,8 @@
 
 <template>
     <div class="column q-gutter-y-md">
+        <q-input v-model="siteTitle" filled label="Site title" @input="saveSettings()" clearable/>
+        <q-input v-model="siteDescription" filled label="Tagline" @input="saveSettings()" clearable/>
         <q-toggle v-model="blogHomepage" label="Use posts archive as homepage"/>
         <q-select v-if="!blogHomepage" v-model="pageForFront" label="Homepage" filled :options="pages" option-value="id" option-label="title" map-options emit-value @input="saveSettings()" />
         <q-select v-if="!blogHomepage" v-model="pageForPosts" label="Posts archive page" filled :options="pages" option-value="id" option-label="title" map-options emit-value @input="saveSettings()" />
@@ -54,6 +56,22 @@ export default class SettingsGeneral extends SettingsBaseComponent {
 
     private get pages(): ContentEntity[] {
         return this.contentEntities.hasOwnProperty('page') ? this.contentEntities['page'] : [];
+    }
+
+    private get siteTitle(): string|null {
+        return this.getSettingAs('site_title', 'string');
+    }
+
+    private set siteTitle(value: string|null) {
+        this.setSettingAs<string>('site_title', value);
+    }
+
+    private get siteDescription(): string|null {
+        return this.getSettingAs('site_description', 'string');
+    }
+
+    private set siteDescription(value: string|null) {
+        this.setSettingAs<string>('site_description', value);
     }
 
     private get pageForFront(): number|null {
