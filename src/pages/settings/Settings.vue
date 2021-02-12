@@ -30,6 +30,7 @@
 <script lang="ts">
 import SettingsGeneral from 'components/settings/SettingsGeneral.vue';
 import SettingsPermalinks from 'components/settings/SettingsPermalinks.vue';
+import SettingsEmails from 'components/settings/SettingsEmails.vue';
 import { EventBus } from 'src/event/EventBus';
 import DynamicComponent from 'src/model/interfaces/DynamicComponent';
 import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -38,7 +39,7 @@ import { namespace } from 'vuex-class';
 const SettingStore = namespace('Setting');
 
 @Component({
-    components: {SettingsGeneral, SettingsPermalinks},
+    components: {SettingsGeneral, SettingsPermalinks, SettingsEmails},
 })
 export default class Settings extends Vue {
     @SettingStore.Action private querySettings;
@@ -56,6 +57,11 @@ export default class Settings extends Vue {
             id: 'permalinks',
             title: 'Permalinks',
             component: 'SettingsPermalinks',
+        },
+        {
+            id: 'emails',
+            title: 'Emails',
+            component: 'SettingsEmails',
         },
     ];
 

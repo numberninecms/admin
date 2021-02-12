@@ -13,6 +13,7 @@
         <q-select v-if="!blogHomepage" v-model="pageForFront" label="Homepage" filled :options="pages" option-value="id" option-label="title" map-options emit-value @input="saveSettings()" />
         <q-select v-if="!blogHomepage" v-model="pageForPosts" label="Posts archive page" filled :options="pages" option-value="id" option-label="title" map-options emit-value @input="saveSettings()" />
         <q-select v-model="pageForMyAccount" label="My account page" filled :options="pages" option-value="id" option-label="title" map-options emit-value @input="saveSettings()" />
+        <q-select v-model="pageForPrivacy" label="Privacy page" filled :options="pages" option-value="id" option-label="title" map-options emit-value @input="saveSettings()" />
     </div>
 </template>
 <script lang="ts">
@@ -77,6 +78,14 @@ export default class SettingsGeneral extends SettingsBaseComponent {
 
     private set pageForMyAccount(value: number|null) {
         this.setSettingAs<number>('page_for_my_account', value);
+    }
+
+    private get pageForPrivacy(): number|null {
+        return this.getSettingAs('page_for_privacy', 'number');
+    }
+
+    private set pageForPrivacy(value: number|null) {
+        this.setSettingAs<number>('page_for_privacy', value);
     }
 }
 </script>
