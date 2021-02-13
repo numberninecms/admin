@@ -15,6 +15,10 @@
                        :is="component.component"
                        v-bind="{...component.props}"
                        v-on="{...component.events}"/>
+            <q-btn-group class="q-mt-md" >
+                <q-btn label="Save" color="primary" @click="saveSettings()"/>
+                <q-btn label="Restore" @click="restoreSettings()"/>
+            </q-btn-group>
         </div>
 
         <q-page-sticky expand position="top">
@@ -43,6 +47,8 @@ const SettingStore = namespace('Setting');
 })
 export default class Settings extends Vue {
     @SettingStore.Action private querySettings;
+    @SettingStore.Action private saveSettings;
+    @SettingStore.Action private restoreSettings;
 
     @Prop()
     private page: string;

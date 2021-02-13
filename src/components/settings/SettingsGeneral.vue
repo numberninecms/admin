@@ -9,13 +9,13 @@
 
 <template>
     <div class="column q-gutter-y-md">
-        <q-input v-model="siteTitle" filled label="Site title" @input="saveSettings()" clearable/>
-        <q-input v-model="siteDescription" filled label="Tagline" @input="saveSettings()" clearable/>
+        <q-input v-model="siteTitle" filled label="Site title" clearable/>
+        <q-input v-model="siteDescription" filled label="Tagline" clearable/>
         <q-toggle v-model="blogHomepage" label="Use posts archive as homepage"/>
-        <q-select v-if="!blogHomepage" v-model="pageForFront" label="Homepage" filled :options="pages" option-value="id" option-label="title" map-options emit-value @input="saveSettings()" />
-        <q-select v-if="!blogHomepage" v-model="pageForPosts" label="Posts archive page" filled :options="pages" option-value="id" option-label="title" map-options emit-value @input="saveSettings()" />
-        <q-select v-model="pageForMyAccount" label="My account page" filled :options="pages" option-value="id" option-label="title" map-options emit-value @input="saveSettings()" />
-        <q-select v-model="pageForPrivacy" label="Privacy page" filled :options="pages" option-value="id" option-label="title" map-options emit-value @input="saveSettings()" />
+        <q-select v-if="!blogHomepage" v-model="pageForFront" label="Homepage" filled :options="pages" option-value="id" option-label="title" map-options emit-value />
+        <q-select v-if="!blogHomepage" v-model="pageForPosts" label="Posts archive page" filled :options="pages" option-value="id" option-label="title" map-options emit-value />
+        <q-select v-model="pageForMyAccount" label="My account page" filled :options="pages" option-value="id" option-label="title" map-options emit-value />
+        <q-select v-model="pageForPrivacy" label="Privacy page" filled :options="pages" option-value="id" option-label="title" map-options emit-value />
     </div>
 </template>
 <script lang="ts">

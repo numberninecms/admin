@@ -9,8 +9,8 @@
 
 <template>
     <div class="column q-gutter-y-md">
-        <q-input v-model="senderName" filled label="Sender name" @input="saveSettings()" clearable/>
-        <q-input v-model="senderAddress" type="email" filled label="Sender email address" @input="saveSettings()" clearable/>
+        <q-input v-model="senderName" filled label="Sender name" clearable/>
+        <q-input v-model="senderAddress" type="email" filled label="Sender email address" clearable/>
     </div>
 </template>
 <script lang="ts">

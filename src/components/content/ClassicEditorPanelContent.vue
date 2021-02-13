@@ -71,7 +71,7 @@ export default class ClassicEditorPanelContent extends Vue {
             : undefined;
     }
 
-    private get slugifiedTitle(): string|undefined {
+    private get slugifiedTitle(): string {
         return changeCase.paramCase(this.value.title);
     }
 }
