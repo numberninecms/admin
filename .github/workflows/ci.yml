@@ -11,12 +11,21 @@ jobs:
                 uses: actions/checkout@v2
 
             -   name: Install Quasar CLI
-                run: yarn global add @quasar/cli
-
-            -   name: Install and build
                 run: |
-                    yarn install
-                    quasar build
+                    yarn global add @quasar/cli
+                    echo "$(yarn global bin)" >> $GITHUB_PATH
+
+            -   name: Install dependencies
+                run: yarn install
+
+            -   name: Build the project
+                run: quasar build
+
+            -   uses: actions/upload-artifact@v2
+                if: startsWith(github.ref, 'refs/tags/')
+                with:
+                    name: numberninecms-admin
+                    path: dist/spa
 
     release:
         if: startsWith(github.ref, 'refs/tags/')
@@ -24,12 +33,17 @@ jobs:
         name: Release
         runs-on: ubuntu-latest
         steps:
+            -   name: Download artifact
+                uses: actions/download-artifact@v2
+                with:
+                    name: numberninecms-admin
+
             -   name: Retrieve release version
                 id: vars
                 run: echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
 
-            -   name: Create artifact
-                run: cd dist/spa && zip -rq9 numberninecms-admin-${{ steps.vars.outputs.tag }}.zip ./*
+            -   name: Create release zip file
+                run: zip -rq9 numberninecms-admin-${{ steps.vars.outputs.tag }}.zip ./*
 
             -   name: Create Draft Release
                 id: create_release
