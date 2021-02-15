@@ -17,6 +17,7 @@ export default interface ContentEntity {
     id: number;
     type: string;
     title: string;
+    slug: string;
     author: User;
     publicUrl: string;
     createdAt: Date;

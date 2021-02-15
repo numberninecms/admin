@@ -12,6 +12,7 @@ import GenericObject from 'src/model/interfaces/GenericObject';
 import KeyValueEntity from 'src/model/interfaces/KeyValueEntity';
 import MediaFile from 'src/model/interfaces/MediaFile';
 import User from 'src/model/interfaces/User';
+import Term from 'src/model/interfaces/Term';
 
 export default class ContentEntityImpl implements ContentEntity {
     public author: User;
@@ -27,6 +28,8 @@ export default class ContentEntityImpl implements ContentEntity {
     public status: string;
     public title: string;
     public type: string;
+    public slug: string;
+    public terms: Term[];
 
     public getCustomField(key: string): KeyValueEntity<any> {
         let cf = this.customFieldsComputed.find((cf) => cf.key === key);

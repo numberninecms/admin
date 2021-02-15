@@ -11,21 +11,23 @@ import Setting from 'src/model/interfaces/Setting';
 import { Vue } from 'vue-property-decorator';
 import { Action, Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
 import { axios, Routing } from 'src/utils/routing';
+import { cloneDeep } from 'lodash';
 
 @Module({ namespaced: true })
 export default class SettingModule extends VuexModule {
     public settings: Setting[] = [];
+    public settingsBackup: Setting[] = [];
     public colors: Setting[] = [];
     public hasChange = false;
 
-    @MutationAction({mutate: ['settings']})
+    @MutationAction({mutate: ['settings', 'settingsBackup']})
     public async querySettings(force: boolean) {
         if (force || !(this.settings && this.settings.length > 0)) {
             const response = await axios.get(Routing.generate('numbernine_admin_settings_get_collection'));
-            return {settings: response.data};
+            return {settings: response.data, settingsBackup: cloneDeep(response.data)};
         }
 
-        return {settings: this.settings};
+        return {settings: this.settings, settingsBackup: this.settingsBackup};
     }
 
     @Action
@@ -41,6 +43,12 @@ export default class SettingModule extends VuexModule {
         if (this.hasChange) {
             await axios.put(Routing.generate('numbernine_admin_settings_update_collection'), this.settings);
         }
+        this.context.commit('BACKUP_SETTINGS');
+    }
+
+    @Action
+    public restoreSettings() {
+        this.context.commit('RESTORE_SETTINGS');
     }
 
     @Action
@@ -51,6 +59,16 @@ export default class SettingModule extends VuexModule {
     @Mutation
     public SET_COLORS(colors) {
         Vue.set(this, 'colors', colors);
+    }
+
+    @Mutation
+    public RESTORE_SETTINGS() {
+        Vue.set(this, 'settings', cloneDeep(this.settingsBackup));
+    }
+
+    @Mutation
+    public BACKUP_SETTINGS() {
+        Vue.set(this, 'settingsBackup', cloneDeep(this.settings));
     }
 
     @Mutation

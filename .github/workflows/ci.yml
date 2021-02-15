@@ -1,0 +1,84 @@
+name: CI
+
+on: [ push, pull_request ]
+
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-20.04
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v2
+
+            -   name: Install Quasar CLI
+                run: |
+                    yarn global add @quasar/cli
+                    echo "$(yarn global bin)" >> $GITHUB_PATH
+
+            -   name: Install dependencies
+                run: yarn install
+
+            -   name: Build the project
+                run: quasar build
+
+            -   uses: actions/upload-artifact@v2
+                if: startsWith(github.ref, 'refs/tags/') || startsWith(github.ref, 'refs/heads/release/')
+                with:
+                    name: numberninecms-admin
+                    path: dist/spa
+
+    release:
+        if: startsWith(github.ref, 'refs/tags/') || startsWith(github.ref, 'refs/heads/release/')
+        needs: [ build ]
+        name: Release
+        runs-on: ubuntu-20.04
+        steps:
+            -   name: Download artifact
+                uses: actions/download-artifact@v2
+                with:
+                    name: numberninecms-admin
+
+            -   name: Retrieve release version
+                id: vars
+                run: |
+                    if [[ "$GITHUB_REF" == refs/tags/* ]] ; then
+                        echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
+                        echo ::set-output name=prerelease::false
+                    else
+                        echo ::set-output name=tag::${GITHUB_REF#refs/heads/release/}-PRE$GITHUB_RUN_ID
+                        echo ::set-output name=prerelease::true
+                    fi
+
+            -   name: Set artifact name
+                id: artifact
+                run: echo ::set-output name=artifact::numberninecms-admin-${{ steps.vars.outputs.tag }}.zip
+
+            -   name: Create release zip file
+                run: zip -rq9 numberninecms-admin-${{ steps.vars.outputs.tag }}.zip ./*
+
+            -   name: Create Draft Release
+                id: create_release
+                uses: actions/create-release@v1
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                with:
+                    tag_name: ${{ steps.vars.outputs.tag }}
+                    release_name: ${{ steps.vars.outputs.tag }}
+                    draft: true
+                    prerelease: ${{ steps.vars.outputs.prerelease }}
+
+            -   uses: actions/upload-release-asset@v1
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                with:
+                    upload_url: ${{ steps.create_release.outputs.upload_url }}
+                    asset_path: ./${{ steps.artifact.outputs.artifact }}
+                    asset_name: ${{ steps.artifact.outputs.artifact }}
+                    asset_content_type: application/zip
+
+            -   uses: eregon/publish-release@v1
+                if: startsWith(github.ref, 'refs/tags/')
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                with:
+                    release_id: ${{ steps.create_release.outputs.id }}
