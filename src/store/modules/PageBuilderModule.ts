@@ -198,6 +198,7 @@ export default class PageBuilderModule extends VuexModule {
     @Action
     public async saveShortcodePreset(payload): Promise<void> {
         await axios.post(Routing.generate('numbernine_admin_page_builder_shortcode_post_presets', {name: payload.name}), payload.content);
+        this.context.commit('ADD_COMPONENT_PRESET', {name: payload.name, component: payload.content});
     }
 
     @Action
@@ -339,6 +340,18 @@ export default class PageBuilderModule extends VuexModule {
     @Mutation
     public UPDATE_COMPONENT_PRESETS({name, presets}): void {
         Vue.set(this.componentPresets, name, presets);
+    }
+
+    @Mutation
+    public ADD_COMPONENT_PRESET({name, component}): void {
+        if (!this.componentPresets.hasOwnProperty(component.name)) {
+            Vue.set(this.componentPresets, component.name, []);
+        }
+
+        this.componentPresets[component.name].splice(this.componentPresets[component.name].length, 0, {
+            name,
+            components: [component]
+        });
     }
 
     @Mutation

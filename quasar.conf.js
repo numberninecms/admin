@@ -1,6 +1,8 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
 
+const ESLintPlugin = require('eslint-webpack-plugin');
+
 module.exports = function (ctx) {
     return {
         supportTS: true,
@@ -15,8 +17,9 @@ module.exports = function (ctx) {
         boot: [
             'i18n',
             'axios',
-            'eventBus',
-            'routing'
+            'event-bus',
+            'routing',
+            'notify-defaults',
         ],
 
         // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -57,7 +60,8 @@ module.exports = function (ctx) {
 
             // Quasar plugins
             plugins: [
-                'Loading'
+                'Loading',
+                'Notify',
             ]
         },
 
@@ -75,15 +79,9 @@ module.exports = function (ctx) {
 
             // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
             extendWebpack (cfg) {
-                cfg.module.rules.push({
-                    enforce: 'pre',
-                    test: /\.(js|vue)$/,
-                    loader: 'eslint-loader',
-                    exclude: /node_modules/,
-                    options: {
-                        formatter: require('eslint').CLIEngine.getFormatter('stylish')
-                    }
-                })
+                cfg.plugins.push(new ESLintPlugin({
+                    formatter: require('eslint').CLIEngine.getFormatter('stylish'),
+                }));
             }
         },
 
