@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import $ from 'jquery';
 import { Vue } from 'vue-property-decorator';
 import PageBuilder from '../components/pagebuilder/PageBuilder.vue';
 import PageBuilderComponent from '../components/pagebuilder/PageBuilderComponent.vue';
@@ -25,7 +24,7 @@ class PageBuilderCompiler {
 
     public compile(element: Element) {
         const el = document.createElement('div');
-        $(element).after(el);
+        element.parentNode!.insertBefore(el, element);
 
         const res = Vue.compile(element.outerHTML);
         const pageBuilderComponent = new Vue({
@@ -35,7 +34,7 @@ class PageBuilderCompiler {
             store,
         }).$mount(el);
 
-        $(element).remove();
+        element.parentNode!.removeChild(element);
 
         return pageBuilderComponent;
     }
