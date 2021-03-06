@@ -53,7 +53,7 @@ export default class PageBuilderComponentForm extends Vue {
 
     private async update(parameter: string, value: any) {
         // A control can override which field will be updated instead of itself
-        if (value.hasOwnProperty('parameter') && value.hasOwnProperty('value')) {
+        if (PageBuilderComponentForm.isValueOverridden(value)) {
             parameter = value.parameter;
             value = value.value;
         }
@@ -69,7 +69,7 @@ export default class PageBuilderComponentForm extends Vue {
 
     private async updateComputed(parameter: string, value: any) {
         // A control can override which field will be updated instead of itself
-        if (value.hasOwnProperty('parameter') && value.hasOwnProperty('value')) {
+        if (PageBuilderComponentForm.isValueOverridden(value)) {
             parameter = value.parameter;
             value = value.value;
         }
@@ -93,6 +93,13 @@ export default class PageBuilderComponentForm extends Vue {
 
     private get form(): Form | null {
         return this.pageComponentForms[this.component.name] ?? null;
+    }
+
+    private static isValueOverridden(value: any): boolean {
+        return typeof value === 'object'
+            && value !== null
+            && value.hasOwnProperty('parameter')
+            && value.hasOwnProperty('value');
     }
 }
 </script>
