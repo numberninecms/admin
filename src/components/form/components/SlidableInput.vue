@@ -29,8 +29,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
-import { EventBus } from '../../../event/EventBus';
-import Point2D from '../../../model/interfaces/Point2D';
+import { EventBus } from 'src/event/EventBus';
+import Point2D from 'src/model/interfaces/Point2D';
 import SlidableInputOverlay from './SlidableInputOverlay.vue';
 
 const PageBuilderStore = namespace('PageBuilder');
@@ -75,15 +75,15 @@ export default class SlidableInput extends Vue {
                 this.setSlideDragging(true);
                 this.setSlideDraggingOriginValue(this.value);
                 document.querySelector('body')!.style.pointerEvents = 'all';
-                EventBus.on('SlideDragging:position', this.updatePosition.bind(this));
-                EventBus.on('SlideDragging:stop', this.stopDragging.bind(this));
+                EventBus.on('SlideDragging:position', this.updatePosition);
+                EventBus.on('SlideDragging:stop', this.stopDragging);
             }
         } else {
             this.mouse.move = false;
         }
     }
 
-    private updatePosition(position?: Point2D) {
+    private updatePosition(position?: Point2D): void {
         if (!position) {
             return;
         }
@@ -101,13 +101,14 @@ export default class SlidableInput extends Vue {
         this.$emit('input', newValue);
     }
 
-    private stopDragging() {
-        EventBus.off('SlideDragging:position', this.updatePosition.bind(this));
+    private stopDragging(): void {
+        EventBus.all.delete('SlideDragging:position');
+        EventBus.all.delete('SlideDragging:stop');
         this.mouse.move = false;
         this.mouse.down = false;
     }
 
-    private get isSelfDragging() {
+    private get isSelfDragging(): boolean {
         return this.mouse.down && this.mouse.move;
     }
 
