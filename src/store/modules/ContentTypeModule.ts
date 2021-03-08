@@ -7,10 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { Module, MutationAction, VuexModule } from 'vuex-module-decorators';
+import {Action, Module, MutationAction, VuexModule} from 'vuex-module-decorators';
 import { EventBus } from 'src/event/EventBus';
 import { axios, Routing } from 'src/utils/routing';
 import ContentType from 'src/model/interfaces/ContentType';
+import EditorExtension from 'src/model/interfaces/EditorExtension';
 
 @Module({ namespaced: true })
 export default class ContentTypeModule extends VuexModule {
@@ -21,6 +22,15 @@ export default class ContentTypeModule extends VuexModule {
         const response = await axios.get(Routing.generate('numbernine_admin_contenttypes_get_collection'));
         EventBus.emit('ContentType:loaded');
         return {contentTypes: response.data as ContentType[]};
+    }
+
+    @Action
+    public async fetchContentTypeEditorExtension(type: string): Promise<EditorExtension> {
+        const response = await axios.get(
+            Routing.generate('numbernine_admin_contenttype_editor_extension_get_item', { type })
+        );
+
+        return response.data;
     }
 
     public get findByName() {

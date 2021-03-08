@@ -78,11 +78,13 @@ import ClassicEditorPanelContent from 'components/content/ClassicEditorPanelCont
 import ClassicEditorPanelCustomFields from 'components/content/ClassicEditorPanelCustomFields.vue';
 import ClassicEditorPanelRevisions from 'components/content/ClassicEditorPanelRevisions.vue';
 import ClassicEditorPanelSEO from 'components/content/ClassicEditorPanelSEO.vue';
+import ClassicEditorPanelDynamic from 'components/content/ClassicEditorPanelDynamic.vue';
 import ClassicEditorSidebarTaxonomy from 'components/content/ClassicEditorSidebarTaxonomy.vue';
 import ClassicEditorSidebarFeaturedImage from 'components/content/ClassicEditorSidebarFeaturedImage.vue';
 import ClassicEditorSidebarPageTemplate from 'components/content/ClassicEditorSidebarPageTemplate.vue';
 import ClassicEditorSidebarPublish from 'components/content/ClassicEditorSidebarPublish.vue';
 import ClassicEditorSidebarSwitchPageBuilder from 'components/content/ClassicEditorSidebarSwitchPageBuilder.vue';
+import ClassicEditorSidebarDynamic from 'components/content/ClassicEditorSidebarDynamic.vue';
 import MediaLibraryDialog from 'components/medialibrary/MediaLibraryDialog.vue';
 import MediaSelect from 'components/medialibrary/MediaSelect.vue';
 import { cloneDeep } from 'lodash';
@@ -96,6 +98,7 @@ import Taxonomy from 'src/model/interfaces/Taxonomy';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
 import 'reflect-metadata';
+import EditorExtension from 'src/model/interfaces/EditorExtension';
 
 const ContentTypeStore = namespace('ContentType');
 const ContentStore = namespace('Content');
@@ -107,17 +110,20 @@ const TaxonomyStore = namespace('Taxonomy');
         ClassicEditorPanelSEO,
         ClassicEditorPanelCustomFields,
         ClassicEditorPanelRevisions,
+        ClassicEditorPanelDynamic,
         ClassicEditorSidebarPublish,
         ClassicEditorSidebarFeaturedImage,
         ClassicEditorSidebarSwitchPageBuilder,
         ClassicEditorSidebarPageTemplate,
         ClassicEditorSidebarTaxonomy,
+        ClassicEditorSidebarDynamic,
         MediaSelect,
         MediaLibraryDialog
     },
 })
 export default class ContentEditClassic extends Vue {
     @ContentTypeStore.State private contentTypes;
+    @ContentTypeStore.Action private fetchContentTypeEditorExtension;
     @ContentTypeStore.Getter private findByName;
     @ContentStore.State private contentEntitiesRevisions;
     @ContentStore.Action private fetchFullById;
@@ -201,9 +207,6 @@ export default class ContentEditClassic extends Vue {
     ];
 
     private created() {
-        EventBus.emit('ContentEditClassic:sidebarComponents', {type: this.type, sidebarComponents: this.sidebarComponents});
-        EventBus.emit('ContentEditClassic:tabs', {type: this.type, tabs: this.tabs});
-
         EventBus.on('ContentType:loaded', () => { this.getEntity(); });
 
         this.fetchTaxonomies();
@@ -217,6 +220,34 @@ export default class ContentEditClassic extends Vue {
         this.originalEntity = await this.fetchFullById({type: this.type, id: this.id});
         this.model = plainToClassFromExist(new ContentEntityImpl(), cloneDeep(this.originalEntity));
         this.fetchContentEntityRevisions(this.model);
+
+        const extension: EditorExtension = await this.fetchContentTypeEditorExtension(this.type);
+        extension.tabs.forEach((tab) => {
+            this.tabs.push({
+                name: tab.name,
+                icon: tab.parameters.icon ?? 'mdi-file-document-edit-outline',
+                label: tab.parameters.label,
+                panel: {
+                    component: 'ClassicEditorPanelDynamic',
+                    props: {
+                        'extension': tab,
+                    }
+                },
+            });
+        });
+
+        extension.sidebarComponents.forEach((sidebarComponent) => {
+            this.sidebarComponents.push({
+                id: `ClassicEditorSidebarDynamic_${sidebarComponent.name}`,
+                component: 'ClassicEditorSidebarDynamic',
+                props: {
+                    'extension': sidebarComponent,
+                },
+            });
+        });
+
+        EventBus.emit('ContentEditClassic:sidebarComponents', {type: this.type, sidebarComponents: this.sidebarComponents});
+        EventBus.emit('ContentEditClassic:tabs', {type: this.type, tabs: this.tabs});
     }
 
     private async save(done: () => void) {

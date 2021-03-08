@@ -9,7 +9,7 @@
 
 <template>
     <div>
-        <div class="row q-col-gutter-md q-gutter-y-md items-start" v-for="customField in value.customFieldsComputed" :key="customField.id">
+        <div class="row q-col-gutter-md q-gutter-y-md items-start" v-for="customField in filteredCustomFields" :key="customField.id">
             <q-select class="col-12 col-sm-6"
                       filled
                       use-input
@@ -40,6 +40,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
 import ContentEntity from '../../model/interfaces/ContentEntity';
+import KeyValueEntity from 'src/model/interfaces/KeyValueEntity';
 
 const ContentStore = namespace('Content');
 
@@ -63,6 +64,10 @@ export default class ClassicEditorPanelCustomFields extends Vue {
             const needle = val.toLocaleLowerCase();
             this.existingCustomFieldsOptions = Object.values<string>(this.existingCustomFields).filter(v => v.toLocaleLowerCase().includes(needle));
         });
+    }
+
+    private get filteredCustomFields(): KeyValueEntity<any>[] {
+        return this.value.customFieldsComputed.filter((customField) => !customField.key.startsWith('extension.'));
     }
 }
 </script>
