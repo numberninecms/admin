@@ -12,7 +12,7 @@
         <component :is="formControlName(control.name)"
                    v-for="(control, field) in extension.controls"
                    :key="field"
-                   :value="value.customFields[`extension.${extension.name}.${field}`]"
+                   :value="fieldValue(field, control.parameters.default)"
                    :parameters="control.parameters"
                    class="q-mb-md"
                    @input="updateValue(field, $event)"
@@ -55,6 +55,11 @@ export default class ClassicEditorPanelDynamic extends Vue {
 
     private updateValue(key: string, value: any) {
         this.value.setCustomFieldValue(`extension.${this.extension.name}.${key}`, value);
+    }
+
+    private fieldValue(field: string, defaultValue: any) {
+        const customFieldValue = this.value.customFields[`extension.${this.extension.name}.${field}`];
+        return customFieldValue ?? defaultValue;
     }
 }
 </script>
