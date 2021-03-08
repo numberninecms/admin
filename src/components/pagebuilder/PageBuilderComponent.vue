@@ -24,7 +24,7 @@
                @mousedown.native.stop="mouseDown"
                @mouseup.native="mouseUp"
                @mousemove.native="mouseMove"
-               @click.native.stop="select"
+               @click.native.prevent.stop="select"
                @dblclick.native.stop="edit"/>
 </template>
 <script lang="ts">

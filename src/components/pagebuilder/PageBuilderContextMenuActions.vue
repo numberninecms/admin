@@ -30,7 +30,7 @@
                 </q-card-section>
 
                 <q-card-section class="q-pt-none">
-                    <q-input dense v-model="presetName" autofocus @keyup.enter="savePreset"/>
+                    <q-input dense filled v-model="presetName" autofocus @keyup.enter="savePreset"/>
                 </q-card-section>
 
                 <q-card-actions align="right" class="text-primary">
@@ -67,6 +67,7 @@ export default class PageBuilderContextMenuActions extends Vue {
     @PageBuilderStore.Action private duplicateComponent;
     @PageBuilderStore.Action private deleteComponent;
     @PageBuilderStore.Action private saveShortcodePreset;
+    @PageBuilderStore.Action private hideContextMenu;
     @PageBuilderStore.Getter private getComponentById;
 
     @Prop()
@@ -89,12 +90,14 @@ export default class PageBuilderContextMenuActions extends Vue {
         if (this.duplicateAction) {
             this.duplicateComponent(this.selectedId);
             this.$emit('update:duplicate-action', false);
+            this.hideContextMenu();
         }
     }
 
     private confirmDelete() {
         this.$emit('update:delete-action', false);
         this.deleteComponent(this.selectedId);
+        this.hideContextMenu();
     }
 
     private savePreset() {
@@ -105,7 +108,12 @@ export default class PageBuilderContextMenuActions extends Vue {
             content: this.component,
         });
 
+        this.$q.notify({
+            message: `Preset "${this.presetName}" has been saved successfully.`,
+        });
+
         this.presetName = '';
+        this.hideContextMenu();
     }
 
     @Watch('shortcodeAction')
@@ -113,6 +121,7 @@ export default class PageBuilderContextMenuActions extends Vue {
         if (this.shortcodeAction) {
             const response = await this.$axios.post(Routing.generate('numbernine_admin_page_builder_generate_shortcode'), {component: this.component});
             this.shortcodeCode = response.data;
+            this.hideContextMenu();
         }
     }
 

@@ -12,25 +12,25 @@
         <div class="absolute ellipsis control-label">
             {{ parameters.label }}
         </div>
-        <div class="col-3" v-if="parameters.borders.indexOf('top') !== -1">
+        <div class="col-3" v-if="hasBorder('top')">
             <SlidableInput v-model="model.top" @input="onChange" border="top"/>
         </div>
-        <div class="col-3" v-if="parameters.borders.indexOf('right') !== -1">
+        <div class="col-3" v-if="hasBorder('right')">
             <SlidableInput v-model="model.right" @input="onChange" class="col-3" border="right"/>
         </div>
-        <div class="col-3" v-if="parameters.borders.indexOf('bottom') !== -1">
+        <div class="col-3" v-if="hasBorder('bottom')">
             <SlidableInput v-model="model.bottom" @input="onChange" class="col-3" border="bottom"/>
         </div>
-        <div class="col-3" v-if="parameters.borders.indexOf('left') !== -1">
+        <div class="col-3" v-if="hasBorder('left')">
             <SlidableInput v-model="model.left" @input="onChange" class="col-3" border="left"/>
         </div>
     </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import Borders from '../../../model/interfaces/Borders';
-import FormControlParameters from '../../../model/interfaces/FormControlParameters';
-import SlidableInput from '../components/SlidableInput.vue';
+import Borders from 'src/model/interfaces/Borders';
+import FormControlParameters from 'src/model/interfaces/FormControlParameters';
+import SlidableInput from 'src/components/form/components/SlidableInput.vue';
 
 @Component({
     components: {SlidableInput}
@@ -60,11 +60,11 @@ export default class FormControlBorders extends Vue {
                 return v !== 'auto' ? parseInt(v) : v;
             }) : [];
 
-        return new class implements Borders {
-            top: number = array.length > 0 ? array[0] : 0;
-            right: number = array.length > 1 ? array[1] : (array.length > 0 ? array[0] : 0);
-            bottom: number = array.length > 2 ? array[2] : (array.length > 0 ? array[0] : 0);
-            left: number = array.length > 3 ? array[3] : (array.length > 1 ? array[1] : (array.length > 0 ? array[0] : 0));
+        return {
+            top: array.length > 0 ? array[0] : 0,
+            right: array.length > 1 ? array[1] : (array.length > 0 ? array[0] : 0),
+            bottom: array.length > 2 ? array[2] : (array.length > 0 ? array[0] : 0),
+            left: array.length > 3 ? array[3] : (array.length > 1 ? array[1] : (array.length > 0 ? array[0] : 0)),
         }
     }
 
@@ -74,10 +74,10 @@ export default class FormControlBorders extends Vue {
         }
 
         const values = {
-            top: this.parameters.borders.indexOf('top') !== -1 ? `${this.model.top}px` : 'auto',
-            right: this.parameters.borders.indexOf('right') !== -1 ? `${this.model.right}px` : 'auto',
-            bottom: this.parameters.borders.indexOf('bottom') !== -1 ? `${this.model.bottom}px` : 'auto',
-            left: this.parameters.borders.indexOf('left') !== -1 ? `${this.model.left}px` : 'auto',
+            top: this.hasBorder('top') ? `${this.model.top}px` : 'auto',
+            right: this.hasBorder('right') ? `${this.model.right}px` : 'auto',
+            bottom: this.hasBorder('bottom') ? `${this.model.bottom}px` : 'auto',
+            left: this.hasBorder('left') ? `${this.model.left}px` : 'auto',
         }
 
         return `${values.top} ${values.right} ${values.bottom} ${values.left}`
@@ -88,6 +88,10 @@ export default class FormControlBorders extends Vue {
 
     private onChange() {
         this.$emit('input', this.formattedModel);
+    }
+
+    private hasBorder(border: 'top' | 'bottom' | 'left' | 'right'): boolean {
+        return this.parameters.borders.indexOf(border) !== -1;
     }
 }
 </script>

@@ -9,7 +9,7 @@
 
 <template>
     <q-input
-        filled stack-label
+        filled stack-label clearable
         :label="parameters.label"
         :value="value"
         @input="$emit('input', $event)">

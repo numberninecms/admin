@@ -20,9 +20,6 @@
                     />
                 </q-popup-edit>
             </div>
-            <q-btn flat dense color="secondary" icon="mdi-eye-outline" :href="value.publicUrl" type="a" target="_blank">
-                <q-tooltip>View</q-tooltip>
-            </q-btn>
         </div>
         <p class="text-bold text-body1 q-mb-none">Content</p>
         <TinyEditor v-model="value.content"/>

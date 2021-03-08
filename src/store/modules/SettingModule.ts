@@ -9,7 +9,7 @@
 
 import Setting from 'src/model/interfaces/Setting';
 import { Vue } from 'vue-property-decorator';
-import { Action, Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
+import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 import { axios, Routing } from 'src/utils/routing';
 import { cloneDeep } from 'lodash';
 
@@ -19,15 +19,18 @@ export default class SettingModule extends VuexModule {
     public settingsBackup: Setting[] = [];
     public colors: Setting[] = [];
     public hasChange = false;
+    public querying = false;
 
-    @MutationAction({mutate: ['settings', 'settingsBackup']})
+    @Action
     public async querySettings(force: boolean) {
-        if (force || !(this.settings && this.settings.length > 0)) {
+        if (!this.querying && (force || !(this.settings && this.settings.length > 0))) {
+            this.context.commit('QUERYING');
             const response = await axios.get(Routing.generate('numbernine_admin_settings_get_collection'));
-            return {settings: response.data, settingsBackup: cloneDeep(response.data)};
+            this.context.commit('QUERYING_SUCCESS', {settings: response.data, settingsBackup: cloneDeep(response.data)});
+            return;
         }
 
-        return {settings: this.settings, settingsBackup: this.settingsBackup};
+        this.context.commit('QUERYING_SUCCESS', {settings: this.settings, settingsBackup: this.settingsBackup});
     }
 
     @Action
@@ -54,6 +57,18 @@ export default class SettingModule extends VuexModule {
     @Action
     public setSetting({name, value}) {
         this.context.commit('SET_SETTING', {name, value});
+    }
+
+    @Mutation
+    public QUERYING() {
+        this.querying = true;
+    }
+
+    @Mutation
+    public QUERYING_SUCCESS(payload) {
+        Vue.set(this, 'settings', payload.settings);
+        Vue.set(this, 'settingsBackup', payload.settingsBackup);
+        this.querying = false;
     }
 
     @Mutation

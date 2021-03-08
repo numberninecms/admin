@@ -19,11 +19,12 @@
                     @click="leftDrawerOpen = !leftDrawerOpen"
                 />
 
-                <q-avatar>
+                <q-avatar class="q-mr-sm">
                     <q-icon name="img:icons/numbernine64.png" style="font-size: 2rem"/>
                 </q-avatar>
+                <q-btn round flat icon="mdi-home" :href="siteUrl" type="a" target="_blank"/>
                 <q-toolbar-title>
-                    NumberNine CMS – Admin panel
+                    {{ siteTitle }} – Admin panel
                 </q-toolbar-title>
 
                 <div class="q-gutter-sm row items-center no-wrap">
@@ -51,15 +52,30 @@
 import { Component, Vue } from 'vue-property-decorator';
 import NavLeft from '../components/layout/NavLeft.vue';
 import { EventBus } from '../event/EventBus';
+import {namespace} from 'vuex-class';
+
+const SettingStore = namespace('Setting');
 
 @Component({
     components: { NavLeft }
 })
 export default class DefaultLayout extends Vue {
+    @SettingStore.Action private querySettings;
+    @SettingStore.Getter private getSettingValue;
+
     private leftDrawerOpen = true;
 
     private created() {
+        this.querySettings();
         EventBus.on('Layout:hide-drawer', () => this.leftDrawerOpen = false);
+    }
+
+    private get siteTitle(): string {
+        return this.getSettingValue('site_title') as string;
+    }
+
+    private get siteUrl(): string {
+        return this.getSettingValue('root_absolute_url') as string;
     }
 }
 </script>

@@ -26,7 +26,7 @@ export class MenuPreloader implements Preloader {
             await this.$store.dispatch('PageBuilder/updateComponentComputedParameter', {
                 id: this.component.id,
                 parameter: 'selectedMenuName',
-                value: this.$store.state.Menu.menus.find((menu) => menu.id === this.component.parameters.id).name,
+                value: this.$store.state.Menu.menus.find((menu) => menu.id === this.component.parameters.id)?.name,
             });
             EventBus.emit('PageBuilder:update-parameter-after');
         }
