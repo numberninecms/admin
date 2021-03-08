@@ -21,7 +21,7 @@
                     <q-date
                         :value="value"
                         @input="$emit('input', $event)"
-                        mask="YYYY-MM-DD"
+                        mask="YYYY/MM/DD"
                     >
                         <div class="row items-center justify-end">
                             <q-btn v-close-popup label="Close" color="primary" flat />
