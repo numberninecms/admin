@@ -23,6 +23,7 @@ import FormControlSlider from './controls/FormControlSlider.vue';
 import FormControlSliderInput from './controls/FormControlSliderInput.vue';
 import FormControlTextAlign from './controls/FormControlTextAlign.vue';
 import FormControlTextBox from './controls/FormControlTextBox.vue';
+import FormControlDate from 'components/form/controls/FormControlDate.vue';
 
 export default {
     FormControlTextBox,
@@ -30,6 +31,7 @@ export default {
     FormControlBorders,
     FormControlSelect,
     FormControlColor,
+    FormControlDate,
     FormControlEditor,
     FormControlImage,
     FormControlOnOffSwitch,
