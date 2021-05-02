@@ -58,7 +58,9 @@ export default class ClassicEditorPanelDynamic extends Vue {
     }
 
     private fieldValue(field: string, defaultValue: any) {
-        const customFieldValue = this.value.customFields[`extension.${this.extension.name}.${field}`];
+        const customFieldValue = this.value.customFields
+            ? this.value.customFields[`extension.${this.extension.name}.${field}`]
+            : null;
         return customFieldValue ?? defaultValue;
     }
 }
