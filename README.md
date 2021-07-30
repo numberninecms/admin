@@ -1,3 +1,7 @@
+# DEPRECATED
+This repository was used with `numberninecms/cms` 0.1.x and not used anymore.
+Admin had been migrated to `numberninecms/cms` 0.2.x and above and is not using Quasar anymore.
+
 ![NumberNine Logo](./assets/images/NumberNine512_slogan.png)
 
 [![Github Workflow](https://github.com/numberninecms/admin/workflows/CI/badge.svg)](https://github.com/numberninecms/admin/actions)
